@@ -63,19 +63,19 @@ class Hanabi_game():
         self._setup_new_game()
         while len(self.deck) > 0:
             played = False
-            could_discard = []
-            index_reference = {}
-
+            could_discard = [] #stores hand position of the card   [0,5]
+            index_reference = {} #stores the value of the card indexed by hand position
+                                # {0:15,}
             #go through the hand; play any playable card; keep track of other cards
             for index in range(10):
-                if self.is_playable(self.hand[index]):
-                    self.play_card(self.hand[index])
+                if self._is_playable(self.hand[index]):
+                    self._(self.hand[index])
                     #print(f"Played {hand[index]} on {play_base}")
                     self.hand[index] = self.deck.pop() #Draw a new card. This version does not have hand order
                     played = True
                     break #stop going through the hand
 
-                if not self.is_essential(self.hand[index]):
+                if not self._is_essential(self.hand[index]):
                     bisect.insort(could_discard,self.hand[index])
                     index_reference[self.hand[index]] = index
 
@@ -107,7 +107,7 @@ class Hanabi_game():
         return True
     
     #helper functions for the game
-    def is_essential(self,card:int) -> bool:
+    def _is_essential(self,card:int) -> bool:
         if ((card % 5) == 0):
             return True
         
@@ -121,13 +121,13 @@ class Hanabi_game():
             return True
         return False
 
-    def is_playable(self,card:int):
+    def _is_playable(self,card:int):
         color = (card-1) // 5
         if self.play_base[color] == (card - 1):
             return True
         return False
     
-    def play_card(self,card:int):
+    def _play_card(self,card:int):
         self.play_base[(card - 1)//5] += 1
 
     def print_visual_play_base(self):
@@ -165,8 +165,6 @@ class Hanabi_game():
         print("")
 
 
-
-
 class Hanabi_tests(unittest.TestCase):
 
     def test_is_playbable_empty_board(self):
@@ -179,24 +177,24 @@ class Hanabi_tests(unittest.TestCase):
             if number not in valid_plays:
                 invalid_plays.append(number)
         for play in valid_plays:
-            self.assertTrue(h5.is_playable(play))
+            self.assertTrue(h5._is_playable(play))
 
         for play in invalid_plays:
-            self.assertFalse(h5.is_playable(play))
+            self.assertFalse(h5._is_playable(play))
 
     def test_is_playble_wrong_color(self):
         h5 = Hanabi_game(5)
         h5.play_base = [5,6,10,15,20]
-        self.assertFalse(h5.is_playable(6))
+        self.assertFalse(h5._is_playable(6))
         
     def test_play_card(self):
         h5 = Hanabi_game(5)
         h6 = Hanabi_game(6)
         h5.play_base = [0,5,10,15,20]
-        h5.play_card(16)
+        h5._(16)
         expected = [0,5,10,16,20]
         self.assertEqual(expected,h5.play_base)
-        h5.play_card(21)
+        h5._(21)
         expected = [0,5,10,16,21]
         self.assertEqual(expected,h5.play_base)
 
