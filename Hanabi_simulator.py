@@ -17,6 +17,24 @@ def main():
     print(f"{wins} out of {games} games were won. A win rate of {wins/games}")
 
 
+class Card():
+    def __init__(self,value,turn_drawn):
+        if value < 0: #check for valid value
+            raise AttributeError("Cannot assign a negative value to a card.")
+        
+        if turn_drawn < 0: #check for valid turn
+            raise AttributeError("Cannot Cannot assign a negative value to a turn.")
+        
+        if (value - 1) // 5 < 0:
+            raise AttributeError("Cannot assign a negative color")
+        
+        self.value = value
+        self.turn_drawn = turn_drawn
+        self.color = (value - 1) // 5
+
+        
+
+        
 
 class Hanabi_game():
     def __init__(self,colors:int) -> None:
@@ -60,7 +78,7 @@ class Hanabi_game():
             deck.append((color * 5) + 5)
         return deck
         
-    def play_game(self) -> int:
+    def play_game(self,strategy) -> bool:
         self._setup_new_game()
         while len(self.deck) > 0:
             played = False
