@@ -19,9 +19,9 @@ def main():
 
 
 class Hanabi_game():
-    def __init__(self,colors:int,print_lost_games) -> None:
+    def __init__(self,colors:int) -> None:
         #user preferences
-        self.print_lost_games = print_lost_games
+        self.print_lost_games = False
         self.debug = False
         self.colors = colors
 
@@ -31,7 +31,8 @@ class Hanabi_game():
         self.play_base_reference = [x for x in range(0,(self.colors) * 5,5)]
         self.deck_reference = self._make_deck(colors)
 
-        
+    def print_lost_games(self):
+        self.print_lost_games = True
 
     def _setup_new_game(self):
         self.discards = copy.deepcopy(self.discards_reference)
@@ -108,10 +109,10 @@ class Hanabi_game():
     
     #helper functions for the game
     def _is_essential(self,card:int) -> bool:
-        if ((card % 5) == 0):
+        if ((card % 5) == 0): #check if card is a 5
             return True
         
-        if (self.play_base[(card - 1) // 5] >= card):
+        if (self.play_base[Hanabi_game._card_to_color(card)] >= card):
             return False
         
         #we don't need to worry about the fact that there are 3 ones in the deck for the following,
@@ -122,13 +123,16 @@ class Hanabi_game():
         return False
 
     def _is_playable(self,card:int):
-        color = (card-1) // 5
-        if self.play_base[color] == (card - 1):
+        
+        if self.play_base[Hanabi_game._card_to_color(card)] == (card - 1):
             return True
         return False
     
     def _play_card(self,card:int):
-        self.play_base[(card - 1)//5] += 1
+        self.play_base[Hanabi_game._card_to_color(card)] += 1
+
+    def _card_to_color(card:int):
+        return (card -1) // 5
 
     def print_visual_play_base(self):
         print("Play Base: ",end="")
@@ -146,7 +150,7 @@ class Hanabi_game():
         self.hand.sort()
         print("hand: ",end="")
         for card in self.hand:
-            color = self.color_order[(card -1)//5]
+            color = self.color_order[Hanabi_game._card_to_color(card)]
             number = card % 5
             if number == 0:
                 number = 5
@@ -157,7 +161,7 @@ class Hanabi_game():
         print("Discards: ",end="")
         for card in self.discards_reference:
             if self.discards[card] > 0:
-                color = self.color_order[(card -1) // 5]
+                color = self.color_order[Hanabi_game._card_to_color(card)]
                 number = card % 5
                 if number == 0:
                     number == 5
@@ -191,10 +195,10 @@ class Hanabi_tests(unittest.TestCase):
         h5 = Hanabi_game(5)
         h6 = Hanabi_game(6)
         h5.play_base = [0,5,10,15,20]
-        h5._(16)
+        h5._play_card(16)
         expected = [0,5,10,16,20]
         self.assertEqual(expected,h5.play_base)
-        h5._(21)
+        h5._play_card(21)
         expected = [0,5,10,16,21]
         self.assertEqual(expected,h5.play_base)
 
@@ -204,6 +208,6 @@ class Hanabi_tests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #unittest.main()
-    main()  
+    unittest.main()
+    #main()  
 
