@@ -8,7 +8,7 @@ import unittest #testing
 def main():
     games = 100000
     wins = 0
-    h = Hanabi_game(5,False)
+    h = Hanabi_game(5)
 
     for _ in range(games):
         if h.play_game():
@@ -16,21 +16,51 @@ def main():
 
     print(f"{wins} out of {games} games were won. A win rate of {wins/games}")
 
+    
 
-class Card():
-    def __init__(self,value,turn_drawn):
-        if value < 0: #check for valid value
-            raise AttributeError("Cannot assign a negative value to a card.")
+
+class Hanabi_card():    
+    card_id = 0
+    def __init__(self,card:int):
+        if card <= 0: #check for valid value
+            raise AttributeError("Cannot assign a negative or zero value to a card.")
         
-        if turn_drawn < 0: #check for valid turn
-            raise AttributeError("Cannot Cannot assign a negative value to a turn.")
-        
-        if (value - 1) // 5 < 0:
+        if (card - 1) // 5 < 0:
             raise AttributeError("Cannot assign a negative color")
         
-        self.value = value
-        self.turn_drawn = turn_drawn
-        self.color = (value - 1) // 5
+        self.value = card
+
+        self.number = (card - 1) % 5 + 1 # 1 -> 1 5 -> 5, 6->1,9 ->4,10 -> 5 
+        
+        self.color = (card - 1) // 5
+        self._color_known = False
+        self._number_known = False
+
+        self.card_id = Hanabi_card.card_id % 1024 
+            #how to tell cards across rounds
+
+
+    def get_color(self): #returns -1 if color not yet identified
+        if self._color_known:
+            return self.color
+        else: 
+            return -1 
+        
+    def get_number(self):
+        if self._number_known:
+            return self.number
+        else:
+            return -1
+    
+    def clue_number(self,clue_type,clue): # clue_type should be an enum
+        if clue_type == "Number" and self.number == clue:
+            self._number_known = True
+        
+        if clue_type == "Color" and self.color == clue:
+            self._color_known = True
+
+
+
 
         
 
@@ -188,7 +218,6 @@ class Hanabi_game():
 
 
 class Hanabi_tests(unittest.TestCase):
-
     def test_is_playbable_empty_board(self):
         #test the normal case of playable cards on an empty board
         h5 = Hanabi_game(5)
@@ -221,11 +250,34 @@ class Hanabi_tests(unittest.TestCase):
         self.assertEqual(expected,h5.play_base)
 
 
+class Hanabi_card_tests(unittest.TestCase):
+    def test_init(self):
+        #could not figure out how to make error handling work with 
+        #this. To do later.
+        #self.assertRaises(AttributeError,Hanabi_card(-1,5))
+        pass
+
+    def test_get_number(self):
+        card_number = 1
+        for base_card_number in range(1,30):
+            h = Hanabi_card(base_card_number)
+            h._number_known = True
+            self.assertEqual(card_number,h.get_number())
+            
+            if card_number == 5: #
+                card_number = 1
+            else:
+                card_number += 1
+    
+    def test_get_color(self):
+            h = Hanabi_card(5)
+            h._color_known = True
+            self.assertEqual(card_number,h.get_number())
 
 
 
 
 if __name__ == "__main__":
-    unittest.main()
-    #main()  
+    #unittest.main()
+    main()  
 
