@@ -1,7 +1,4 @@
-from abc import ABC,ABCMeta
-
-
-
+#from abc import ABC,ABCMeta
 class Strategy():
     def play_next_turn(self,my_hand,other_hand,discard,misfires,clue_tokens): #this returns a tuple of the following format (move,relevant_index) or (clue,clue_type,clue). Move has 3 valid states 
         move = 0
@@ -14,18 +11,18 @@ class Strategy():
         match move:
             case 1:
                 index = 0
-                while card not in range(1,6):
+                while index not in range(1,6):
                     index = int(input("which card would you like to play"))
                 index -= 1
                 return ("play",index)
             case 2:
                 index = 0
-                while card not in range(1,6):
+                while index not in range(1,6):
                     index = int(input("which card would you like to discard"))
+                    test = type(index)
                 index -= 1
-                return ("discard",index)
+                return("discard",index)
             case 3:
-                type = ["color","number"]
                 type_choice  = 0
                 while type_choice not in range(1,3):
                     print("1 - color clue")

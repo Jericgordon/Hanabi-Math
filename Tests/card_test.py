@@ -19,8 +19,18 @@ class Hanabi_card_tests(unittest.TestCase):
         color = 0
         h = Hanabi_card(5)
         h._color_known = True
-        b = Hanabi_card(6)
-        self.assertEqual(1,h.get_color())
+        self.assertEqual(0,h.get_color())
 
     def test_clue(self):
-        ...
+        h = Hanabi_card(5)
+        h.clue("number",5)
+        self.assertEqual(5,h.get_number())
+        h.clue("color",0)
+        self.assertEqual(0,h.get_color())
+
+        h = Hanabi_card(19)
+        h.clue("number",4)
+        h.clue("color",3)
+        self.assertEqual(4,h.get_number())
+        self.assertEqual(3,h.get_color())
+

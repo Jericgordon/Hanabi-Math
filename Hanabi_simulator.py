@@ -25,7 +25,7 @@ class Hanabi_game():
         self.play_base = copy.deepcopy(self.play_base_reference)
         self.hands = [[] for _ in range(2)]
         self.misfires = 0
-        self.game_lost = False # Boolean to check if the game is lost
+        self._game_lost = False # Boolean to check if the game is lost
         self.clue_counter = 8
         #shuffle a new deck
         self.deck = copy.deepcopy(self.deck_reference)
@@ -56,6 +56,7 @@ class Hanabi_game():
         last_moves = 2
         turn = 0
         player = 0 #this gives us which hand to access when clueing this is the index of the current players hand. player + 1 % 2 is the index of the other
+        opponant = 1
         s1 = strategy() #strategy for player 1
         s2 = strategy() #strategy for player 2
         while last_moves >= 0:
@@ -66,7 +67,7 @@ class Hanabi_game():
                 print("")
                 self.print_visual_discard()
                 self.print_visual_play_base()
-                self.print_visual_other_hand(self.hands[(player + 1) % 2])
+                self.print_visual_other_hand(self.hands[opponant])
                 self.print_visual_my_hand(self.hands[player])
     
             if player == 0: #if it's player 
@@ -76,32 +77,41 @@ class Hanabi_game():
             match move[0]:
                 case "play":
                     self._play_card(self.hands[player],move[1])
-                    break
                 case "discard":
                     self._discard_card(self.hands[player],move[1])
                     self.clue_counter += 1 #we don't have logic that forbids discarding with + 8 clue tokens
-                    break
                 case "clue":
                     self.clue_counter -= 0
-                    self._clue_hand(self.hands[player],move[1],move[2])
+                    self._clue_hand(self.hands[opponant],move[1],move[2])
                 case _:
                     raise ValueError("Invalid move given. Valid moves are play, clue, discard")
             
             turn += 1
             player = turn % 2 # This switches between players, as the only fixed relation in this game is between player and turn
-        
+            opponant = (player + 1) % 2
+            if self._game_lost:
+                break
+        return self._score_game()
+
+    def _score_game(self) -> int:
+        if self._game_lost:
+            return 0
+        score = 0
+        for value in self.play_base:
+            score += value
+        return score
 
     def _clue_hand(self,hand,clue_type,clue:int):
         for card in hand:
             card.clue(clue_type,clue)
         
-        ...
+        
     def _discard_card(self,hand,index:int):
         self.discards[hand[index].value] +=1 # we do store cards in the discard by their literal value, not by card                                              
         self._resplace_card(hand,index)
 
     def _is_playable(self,card:Hanabi_card):
-        if self.play_base[card.get_color()] == (card - 1):
+        if self.play_base[card.color] == (card.value - 1):
             return True
         return False
     
@@ -110,19 +120,20 @@ class Hanabi_game():
             raise AttributeError("Index out of hand size")
         while index > 0: #move other cards down
             hand[index] = hand[index -1]
-        if len(self.deck > 0):
-            index[0] = self.deck.pop()
+            index -= 1
+        if len(self.deck) > 0:
+            hand[0] = Hanabi_card(self.deck.pop())
         else:
             index[0] = Hanabi_card(0) # we use the zeroeth hanabi card to represent a null space in a hand. This is only for the last move of the game
 
     def _play_card(self,hand,hand_index:int):
         card = hand[hand_index]
         if self._is_playable(card):
-            self.play_base[card.get_color()] += 1
+            self.play_base[card.color] += 1
         else:
             self.misfires += 1
             if self.misfires >= 3:
-                self.game_lost = True
+                self._game_lost = True
         self._resplace_card(hand,hand_index)
 
     def _card_to_color(card:int):
@@ -143,17 +154,13 @@ class Hanabi_game():
     def print_visual_other_hand(self,hand):
         print("hand: ",end="")
         for card in hand:
-            color = self.color_order[card.color]
-            number = card.number
-            print(colored(number,color) + " ",end="")
+            print(card.get_entire_card(),end="")
         print("")
     
     def print_visual_my_hand(self,hand):
         print("hand: ",end="")
         for card in hand:
-            number = "*" if card.get_number() == -1 else card.get_number()
-            color = "light_grey" if card.get_color() == -1 else card.get_color()
-            print(colored(number,color) + " ",end="")
+            print(card,end="")
         print("")
     
     def print_visual_discard(self):
