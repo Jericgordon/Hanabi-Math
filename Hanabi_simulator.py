@@ -26,6 +26,7 @@ class Hanabi_game():
         self.misfires = 0
         self._game_lost = False # Boolean to check if the game is lost
         self.clue_counter = 8
+        self.score = 0
         #shuffle a new deck
         self.deck = copy.deepcopy(self.deck_reference)
         random.shuffle(self.deck)
@@ -57,7 +58,7 @@ class Hanabi_game():
         opponant = 1
         s1 = strategy() #strategy for player 1
         s2 = strategy() #strategy for player 2
-        while last_moves >= 0: #perhaps add in early exit
+        while last_moves >= 0 or self.score == (self.colors * 5):
             if len(self.deck) == 0:
                 last_moves -= 1 #this gives us exactly 2 turns after the deck depletes, which the rules require
             if self.debug:
@@ -66,7 +67,7 @@ class Hanabi_game():
                 self.print_visual_discard()
                 self.print_visual_play_base()
                 self.print_visual_other_hand(self.hands[opponant])
-                self.print_visual_my_hand(self.hands[player])
+                self.print_visual_other_hand(self.hands[player])
     
             if player == 0: #if it's player 
                 move = s1.play_next_turn(self.hands[0],self.hands[1],self.discards,self.play_base,self.misfires,self.clue_counter) #player hand,other hand,discards
@@ -89,15 +90,7 @@ class Hanabi_game():
             opponant = (player + 1) % 2
             if self._game_lost:
                 break
-        return self._score_game()
-
-    def _score_game(self) -> int:
-        if self._game_lost:
-            return 0
-        score = 0
-        for value in self.play_base:
-            score += value
-        return score
+        return self.score
 
     def _clue_hand(self,hand,clue_type,clue:int):
         for card in hand:
@@ -137,6 +130,7 @@ class Hanabi_game():
          # if it is playable
         if hand[hand_index].number == 5:
             self._add_clue_token()
+        self.score += 1
         self.play_base[card.color] += 1
         self._resplace_card(hand,hand_index)
 

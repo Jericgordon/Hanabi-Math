@@ -4,10 +4,12 @@ from Cheating_strategy import Cheating_strategy
 
 
 def main():
-    s = Hanabi_game(6)
-    # s.debug = True
-    s.play_game(Cheating_strategy)
+    s = Hanabi_game(5)
+    s.debug = True
+    
+    print(s.play_game(Cheating_strategy))
 
 
 if __name__ == '__main__':
     main()
+    
