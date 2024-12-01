@@ -8,7 +8,7 @@ class Hanabi_card():
         if card < 0: #check for valid value
             raise AttributeError("Cannot assign a negative or zero value to a card.")
         
-        if (card - 1) // 5 < 0:
+        if ((card - 1) // 5 ) < 0:
             raise AttributeError("Cannot assign a negative color")
         
        
@@ -18,7 +18,7 @@ class Hanabi_card():
         self.number = (card - 1) % 5 + 1 # 1 -> 1 5 -> 5, 6->1,9 ->4,10 -> 5 
         self.color = (card - 1) // 5 
 
-        self._color_order ={0:"red",1:'yellow',2:'green',3:'blue',4:'white',5:'magenta'} #reference function for game
+        self._color_order ={0:"red",1:'yellow',2:'green',3:'blue',4:'white',5:'magenta',99:'cyan'} #reference function for game
         self._color_text = self._color_order[self.color]
         self._color_known = False
         self._number_known = False

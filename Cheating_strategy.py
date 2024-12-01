@@ -6,35 +6,61 @@ class Cheating_strategy():
         # 2.discard
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard, play_base,misfires,clue_tokens):
-        current_evaluation = [-1,0,0] #index, category, other_value # see comment above discard_usefullness
-        can_play = []
-        for card_index in len(my_hand):
+        my_hand_evaluation = [-1,5,0] #index, category, other_value # see comment above discard_usefullness
+        for card_index in range(len(my_hand)):
             if self._is_playable(my_hand[card_index],play_base):
-                can_play.append(card_index)
-                continue # We don't want to consider discarding this card if we can play it, as
-                         # we'll always choose to play a card if possible
-            current_evaluation = self.discard_usefullness(my_hand[card_index],play_base,discard,current_evaluation)
-        if len(can_play == 1):
-            return ("play",can_play[0])
-        if len(can_play) > 1:
-            for card_index in can_play():
-                for card in other_hand:
-                    if my_hand[card_index].color == card.color < 
+                return ("play",card_index)
+            my_hand_evaluation = self.discard_usefullness(my_hand,card_index,play_base,discard,my_hand_evaluation)
+        
+        other_hand_evaluation = [-1,5,0]
+        for card_index in range(len(other_hand)):
+            other_hand_evaluation = self.discard_usefullness(other_hand,card_index,play_base,discard,other_hand_evaluation)
+            # if the other hand has a better card to discard, or a card to play, we should let them either play or discard
+            if self._is_playable(other_hand[card_index],play_base):
+                return("clue","color",3) #clue the blue card
+            if (other_hand_evaluation[1] < my_hand_evaluation[1]):
+                return("clue","color",3) #clue the blue card
+        
+        if (other_hand_evaluation[1] == 2 and my_hand_evaluation[1] == 2): #in the case that both hands are filled with essential cards
+            if other_hand[other_hand_evaluation[0]].number > my_hand[my_hand_evaluation[0]].number:
+                return("clue","color",3) #clue the blue card
+            else:
+                return("discard",my_hand_evaluation[0])
+            
+        else:
+            return ("discard",my_hand_evaluation[0])
+                
+                    
 
 
     def _is_playable(self,card,play_base) -> bool:
-        ...
+        if play_base[card.color] == (card.value - 1):
+            return True
+        return False
     
     # Categories of usefullness: 
-        # 1. Essential: It's a 5, or we've discarded it before
-        # 2. Useless: If we've already played it, we don't care
-        # 3. Other; how we recon this is the difference between strategies
+        # 1. Useless: If we've already played it, we don't care
+        # 2. Other; how we recon this is the difference between strategies
             # 1. We can discard the highest card,
             # 2. We can discard the highest chain card
-         
-    def discard_usefullness(self,card,play_base,discard,current_evaluation) -> int:
-        index = -1
-        category = 0
-        other_value = 0
-        ...
+        # 3. Essential: It's a 5, or we've discarded it before
+    def discard_usefullness(self,hand,index,play_base,discard,hand_evaluation):
+        if play_base[hand[index].color] >= hand[index].value:
+            return [index,1,0] # return that it's useless
+        
+        if hand[index].number == 5 or discard[hand[index].value] == 1: #if the card is essential
+            other_value = 5 - hand[index].number
+            if 3 < hand_evaluation[1]:
+                return [index,3,other_value]
+            if hand_evaluation[1] == 3 and other_value < hand_evaluation[2]:
+                return [index,3,other_value]
+            return hand_evaluation
+
+        else:
+            other_value = hand[index].value - play_base[hand[index].color]
+            if 2 < hand_evaluation[1]: #if this is a better card to discard
+                return [index,2,other_value]
+            if hand_evaluation[1] == 2 and other_value > hand_evaluation[2]:
+                return [index,2,other_value]
+            return hand_evaluation
 

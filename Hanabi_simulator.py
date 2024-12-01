@@ -123,7 +123,7 @@ class Hanabi_game():
         if len(self.deck) > 0:
             hand[0] = Hanabi_card(self.deck.pop())
         else:
-            index[0] = Hanabi_card(0) # we use the zeroeth hanabi card to represent a null space in a hand. This is only for the last move of the game
+            hand[0] = Hanabi_card(500) # we use the zeroeth hanabi card to represent a null space in a hand. This is only for the last move of the game
 
     def _play_card(self,hand,hand_index:int) -> None:
         card = hand[hand_index]
