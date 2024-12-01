@@ -69,9 +69,9 @@ class Hanabi_game():
                 self.print_visual_my_hand(self.hands[player])
     
             if player == 0: #if it's player 
-                move = s1.play_next_turn(self.hands[0],self.hands[1],self.discards,self.misfires,self.clue_counter) #player hand,other hand,discards
+                move = s1.play_next_turn(self.hands[0],self.hands[1],self.discards,self.play_base,self.misfires,self.clue_counter) #player hand,other hand,discards
             if player == 1:
-                move = s2.play_next_turn(self.hands[1],self.hands[0],self.discards,self.misfires,self.clue_counter)
+                move = s2.play_next_turn(self.hands[1],self.hands[0],self.discards,self.play_base,self.misfires,self.clue_counter)
             match move[0]:
                 case "play":
                     self._play_card(self.hands[player],move[1])
