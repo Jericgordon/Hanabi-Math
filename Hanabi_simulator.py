@@ -1,7 +1,6 @@
 import random #used for shuffling the deck
 import copy #used for makeing a copy of a the deck to shuffle
 from termcolor import colored #used for printing Hanabi boards in readable output
-import bisect #used for inserting into a sorted list
 from Card import Hanabi_card
 
 class Hanabi_game():
@@ -52,14 +51,13 @@ class Hanabi_game():
         
     def play_game(self,strategy) -> bool:
         self._setup_new_game()
-        self.players = []
         last_moves = 2
         turn = 0
         player = 0 #this gives us which hand to access when clueing this is the index of the current players hand. player + 1 % 2 is the index of the other
         opponant = 1
         s1 = strategy() #strategy for player 1
         s2 = strategy() #strategy for player 2
-        while last_moves >= 0:
+        while last_moves >= 0: #perhaps add in early exit
             if len(self.deck) == 0:
                 last_moves -= 1 #this gives us exactly 2 turns after the deck depletes, which the rules require
             if self.debug:
@@ -109,13 +107,14 @@ class Hanabi_game():
     def _discard_card(self,hand,index:int):
         self.discards[hand[index].value] +=1 # we do store cards in the discard by their literal value, not by card                                              
         self._resplace_card(hand,index)
+        self._add_clue_token()
 
     def _is_playable(self,card:Hanabi_card):
         if self.play_base[card.color] == (card.value - 1):
             return True
         return False
     
-    def _resplace_card(self,hand,index:int):
+    def _resplace_card(self,hand,index:int): #we could get faster with a circular queue; I'm not sure how much faster it would be
         if index < 0 or index > 4: #check for hand size
             raise AttributeError("Index out of hand size")
         while index > 0: #move other cards down
@@ -126,18 +125,27 @@ class Hanabi_game():
         else:
             index[0] = Hanabi_card(0) # we use the zeroeth hanabi card to represent a null space in a hand. This is only for the last move of the game
 
-    def _play_card(self,hand,hand_index:int):
+    def _play_card(self,hand,hand_index:int) -> None:
         card = hand[hand_index]
-        if self._is_playable(card):
-            self.play_base[card.color] += 1
-        else:
+        if not self._is_playable(card): #if the selected card is not playable
             self.misfires += 1
             if self.misfires >= 3:
                 self._game_lost = True
+            self._resplace_card(hand,hand_index)
+            return
+        
+         # if it is playable
+        if hand[hand_index].number == 5:
+            self._add_clue_token()
+        self.play_base[card.color] += 1
         self._resplace_card(hand,hand_index)
 
     def _card_to_color(card:int):
         return (card -1) // 5
+
+    def _add_clue_token(self) -> None:
+        if self.clue_counter < 8:
+            self.clue_counter += 1
 
     def print_visual_play_base(self):
         print("Play Base: ",end="")

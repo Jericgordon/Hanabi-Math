@@ -28,7 +28,7 @@ class Hanabi_card():
     
     def __str__(self):
         number = self.number if self._number_known else "*"
-        color = self._color_text if self._color_known else "light_grey"
+        color = self._color_text if self._color_known else "dark_grey"
         return colored(number,color) + " "
 
     def get_entire_card(self) -> str:

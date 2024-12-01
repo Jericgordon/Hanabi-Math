@@ -8,6 +8,5 @@ def main():
     s.play_game(Strategy)
 
 
-
 if __name__ == '__main__':
     main()
