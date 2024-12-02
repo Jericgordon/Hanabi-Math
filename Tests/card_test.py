@@ -9,7 +9,6 @@ class Hanabi_card_tests(unittest.TestCase):
             h = Hanabi_card(base_card_number)
             h._number_known = True
             self.assertEqual(card_number,h.get_number())
-            
             if card_number == 5: #
                 card_number = 1
             else:

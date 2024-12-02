@@ -27,6 +27,7 @@ class Hanabi_game():
         self._game_lost = False # Boolean to check if the game is lost
         self.clue_counter = 8
         self.score = 0
+        self.turn = 0
         #shuffle a new deck
         self.deck = copy.deepcopy(self.deck_reference)
         random.shuffle(self.deck)
@@ -53,22 +54,14 @@ class Hanabi_game():
     def play_game(self,strategy) -> bool:
         self._setup_new_game()
         last_moves = 2
-        turn = 0
         player = 0 #this gives us which hand to access when clueing this is the index of the current players hand. player + 1 % 2 is the index of the other
         opponant = 1
         s1 = strategy() #strategy for player 1
         s2 = strategy() #strategy for player 2
-        while last_moves >= 0 or self.score == (self.colors * 5):
+        while last_moves >= 0 and self.score != (self.colors * 5):
             if len(self.deck) == 0:
                 last_moves -= 1 #this gives us exactly 2 turns after the deck depletes, which the rules require
-            if self.debug:
-                print(f"turn {turn}")
-                print("")
-                self.print_visual_discard()
-                self.print_visual_play_base()
-                self.print_visual_other_hand(self.hands[opponant])
-                self.print_visual_other_hand(self.hands[player])
-    
+            self._print_all()
             if player == 0: #if it's player 
                 move = s1.play_next_turn(self.hands[0],self.hands[1],self.discards,self.play_base,self.misfires,self.clue_counter) #player hand,other hand,discards
             if player == 1:
@@ -85,18 +78,27 @@ class Hanabi_game():
                 case _:
                     raise ValueError("Invalid move given. Valid moves are play, clue, discard")
             
-            turn += 1
-            player = turn % 2 # This switches between players, as the only fixed relation in this game is between player and turn
+            self.turn += 1
+            player = self.turn % 2 # This switches between players, as the only fixed relation in this game is between player and turn
             opponant = (player + 1) % 2
             if self._game_lost:
                 break
+        self._print_all()
         return self.score
 
     def _clue_hand(self,hand,clue_type,clue:int):
         for card in hand:
             card.clue(clue_type,clue)
         
-        
+    def _print_all(self):
+        if self.debug:
+            print(f"turn {self.turn}")
+            print("")
+            self.print_visual_discard()
+            self.print_visual_play_base()
+            self.print_visual_other_hand(self.hands[(self.turn +1) % 2])
+            self.print_visual_other_hand(self.hands[(self.turn) % 2])
+    
     def _discard_card(self,hand,index:int):
         self.discards[hand[index].value] +=1 # we do store cards in the discard by their literal value, not by card                                              
         self._resplace_card(hand,index)

@@ -1,12 +1,10 @@
-
-
 class Cheating_strategy():
     # Statuses of playing
         # 1.clue 
         # 2.discard
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard, play_base,misfires,clue_tokens):
-        stop = input()
+        # stop = input()
         seen = {x:0 for x in range(1,(6 * 5) + 1)}
         seen[500] = 0
         my_hand_evaluation = [-1,5,0] #index, category, other_value # see comment above discard_usefullness
