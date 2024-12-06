@@ -90,14 +90,14 @@ class Hanabi_game():
         for card in hand:
             card.clue(clue_type,clue)
         
-    def _print_all(self):
+    def _print_all(self):                                                                  
         if self.debug:
             print(f"turn {self.turn}")
             print("")
             self.print_visual_discard()
             self.print_visual_play_base()
             self.print_visual_other_hand(self.hands[(self.turn +1) % 2])
-            self.print_visual_other_hand(self.hands[(self.turn) % 2])
+            self.print_visual_my_hand(self.hands[(self.turn) % 2])
     
     def _discard_card(self,hand,index:int):
         self.discards[hand[index].value] +=1 # we do store cards in the discard by their literal value, not by card                                              
