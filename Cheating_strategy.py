@@ -1,9 +1,9 @@
-class Cheating_strategy():
+class Cheating_play_discard():
     # Statuses of playing
         # 1.clue 
         # 2.discard
         # 3.play
-    def play_next_turn(self,my_hand,other_hand,discard, play_base,misfires,clue_tokens):
+    def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #infinte clues, perfect knowledge
         stop = input()
         seen = {x:0 for x in range(1,(6 * 5) + 1)}
@@ -21,6 +21,10 @@ class Cheating_strategy():
         other_hand_evaluation = [-1,5,0]
         for card_index in range(len(other_hand)):
             other_hand_evaluation = self.discard_usefullness(other_hand,card_index,play_base,discard,other_hand_evaluation)
+            if seen[my_hand[card_index].value] == 0: #deals with duplicates across hands
+                seen[my_hand[card_index].value] += 1
+            else:
+                my_hand_evaluation = [card_index,1,0]
             # if the other hand has a better card to discard, or a card to play, we should let them either play or discard
             if self._is_playable(other_hand[card_index],play_base):
                 return("clue","color",3) #clue the blue card
@@ -71,10 +75,52 @@ class Cheating_strategy():
             if hand_evaluation[1] == 2 and other_value > hand_evaluation[2]:
                 return [index,2,other_value]
             return hand_evaluation
+        
 
+class Cheating_play():
+    # Statuses of playing
+        # 1.clue 
+        # 2.discard
+        # 3.play
+    def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
+        #infinte clues, perfect knowledge
+        stop = input()
+        seen = {x:0 for x in range(1,(6 * 5) + 1)}
+        seen[500] = 0
+        could_discard = []
+        other_hand_could_discard = []
+        for card_index in range(len(my_hand)):
+            if self._is_playable(my_hand[card_index],play_base):
+                return ("play",card_index)
+            if not self._is_essential(my_hand[card_index],play_base,discard):
+                could_discard.append(card_index)
+            
+        for card_index in range(len(other_hand)):
+            # if the other hand has a card to play, we should let them either play or discard
+            if self._is_playable(other_hand[card_index],play_base):
+                return("clue","color",3) #clue the blue card
+            if not self._is_essential(other_hand[card_index],play_base,discard):
+                other_hand_could_discard.append(could_discard)
+        
+        if len(could_discard >= 1):
+            return("discard",could_discard[0])
+        elif len(other_hand_could_discard) >= 1:
+            return("clue","color",3)
+        else:
+            return ("discard",my_hand[0])
 
+    def _is_playable(self,card,play_base) -> bool:
+        if card.value == 500:
+            return False
+        if play_base[card.color] == (card.value - 1):
+            return True
+        return False
 
-# # # # #
-
-# # # # #
-
+    def _is_essential(self,card,play_base,discard):
+        if card.number == 5:
+            return True
+        if play_base[card.color] >= card.value:
+            return False
+        if discard[card.value] >= 1:
+            return True
+        return False

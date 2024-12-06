@@ -1,6 +1,6 @@
 from Hanabi_simulator import Hanabi_game
 from Strategy import Strategy
-from Cheating_strategy import Cheating_strategy
+from Cheating_strategy import Cheating_play_discard
 import matplotlib.pyplot as plt
 import math
 
@@ -10,7 +10,7 @@ def main():
     s = Hanabi_game(5)
     s.debug = True
     for _ in range(iterations):
-        score_cheating_strategy[s.play_game(Strategy)] += 1   
+        score_cheating_strategy[s.play_game(Cheating_play_discard)] += 1   
     x_axis = [x for x in range(0,26)]
     average_score = sum (x_axis)
     for val_index in range(len(score_cheating_strategy)):
