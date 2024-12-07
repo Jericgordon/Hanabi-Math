@@ -5,7 +5,7 @@ class Cheating_play_discard():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #infinte clues, perfect knowledge
-        stop = input()
+        #stop = input()
         seen = {x:0 for x in range(1,(6 * 5) + 1)}
         seen[500] = 0
         my_hand_evaluation = [-1,5,0] #index, category, other_value # see comment above discard_usefullness
@@ -84,7 +84,7 @@ class Cheating_play():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #infinte clues, perfect knowledge
-        stop = input()
+       #stop = input()
         seen = {x:0 for x in range(1,(6 * 5) + 1)}
         seen[500] = 0
         could_discard = []
@@ -100,14 +100,14 @@ class Cheating_play():
             if self._is_playable(other_hand[card_index],play_base):
                 return("clue","color",3) #clue the blue card
             if not self._is_essential(other_hand[card_index],play_base,discard):
-                other_hand_could_discard.append(could_discard)
+                other_hand_could_discard.append(card_index)
         
-        if len(could_discard >= 1):
+        if len(could_discard) >= 1:
             return("discard",could_discard[0])
         elif len(other_hand_could_discard) >= 1:
             return("clue","color",3)
         else:
-            return ("discard",my_hand[0])
+            return ("discard",4)
 
     def _is_playable(self,card,play_base) -> bool:
         if card.value == 500:
@@ -117,6 +117,8 @@ class Cheating_play():
         return False
 
     def _is_essential(self,card,play_base,discard):
+        if card.value == 500:
+            return True
         if card.number == 5:
             return True
         if play_base[card.color] >= card.value:
