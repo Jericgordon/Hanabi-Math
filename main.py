@@ -1,6 +1,5 @@
 from Hanabi_simulator import Hanabi_game
 from Cheating_strategies import Cheating_play,Cheating_play_discard
-from Cheating_strategies import Cheating_play_discard,Cheating_play
 import matplotlib.pyplot as plt
 import numpy as np
 
