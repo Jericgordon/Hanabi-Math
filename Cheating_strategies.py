@@ -85,7 +85,7 @@ class Cheating_play():
         seen[500] = 0
         could_discard = []
         other_hand_could_discard = []
-        for card_index in reversed(range(len(my_hand))):
+        for card_index in range(len(my_hand)):
             if self._is_playable(my_hand[card_index],play_base):
                 return ("play",card_index)
             if not self._is_essential(my_hand[card_index],play_base,discard):
