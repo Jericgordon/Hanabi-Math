@@ -12,7 +12,7 @@ def main():
     #     score[s.play_game(Cheating_strategy)] += 1   
     # x_axis = [x for x in range(0,26)]
     # average_score = 0
-    # for val_index in range(len(score)):
+    # for val_index in range(len(score)):37
     #     average_score += (val_index * score[val_index])
     # average_score = average_score / iterations
     # print(average_score)
@@ -20,7 +20,9 @@ def main():
     # plt.show()
     s = Hanabi_game(5)
     s.debug = True
+    #s.play_game(Strategy)
     s.play_game(Cheat_strat_clue)
+    #s.play_game(Cheating_strategy)
     
     
 if __name__ == '__main__':
