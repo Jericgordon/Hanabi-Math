@@ -1,6 +1,6 @@
 #from abc import ABC,ABCMeta
 class Strategy():
-    def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens): #this returns a tuple of the following format (move,relevant_index) or (clue,clue_type,clue). Move has 3 valid states 
+    def play_next_turn(self,my_hand,other_hand,play_base,discard,misfires,clue_tokens): #this returns a tuple of the following format (move,relevant_index) or (clue,clue_type,clue). Move has 3 valid states 
         move = 0
         while move not in range(1,4):
             print("1 - Play card")
