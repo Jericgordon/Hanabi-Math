@@ -1,5 +1,5 @@
 from Hanabi_simulator import Hanabi_game
-from Strategy import Strategy
+from Cheating_strategies import Cheating_play,Cheating_play_discard
 from Cheating_strategies import Cheating_play_discard,Cheating_play
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,14 +7,14 @@ import numpy as np
 
 
 def main():
-    iterations = 100000
+    iterations = 10000
     score_play_and_discard = [0 for _ in range(26)] 
     score_play = [0 for _ in range(26)] 
     s = Hanabi_game(5)
     #s.debug = True 
     for _ in range(iterations):
-        score_play_and_discard[s.play_game(Cheating_play)] += 1 
-        score_play[s.play_game(Cheating_play_discard)] += 1 
+        score_play_and_discard[s.play_game(Cheating_play_discard)] += 1 
+        score_play[s.play_game(Cheating_play)] += 1 
         
     x_axis = [x for x in range(0,26)]
     total_points_play_discard = 0

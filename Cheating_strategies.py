@@ -7,8 +7,6 @@ class Cheating_play_discard():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #infinte clues, perfect knowledge
-        #stop = input()
-
         my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
         s = play_discard_rater(discard,play_base)
         for card_index in range(len(my_hand)):
@@ -19,10 +17,8 @@ class Cheating_play_discard():
                 my_hand_rating = r
             
         for card_index in range(len(other_hand)):
-            if self._is_playable(other_hand[card_index],play_base):
-                return("clue","color",3) #clue the blue card
             other_rating = s.rate_next_card(card_index,my_hand[card_index])
-            if other_rating < my_hand_rating:
+            if other_rating < my_hand_rating or self._is_playable(other_hand[card_index],play_base): # if it's playable or better to discard
                 return("clue","color",3) #clue the blue card
 
         return("discard",my_hand_rating.index)
@@ -40,7 +36,7 @@ class Cheating_play_discard():
 
 class play_discard_rater():
     def __init__(self,discard, play_base):
-        self.discards = discard
+        self.discard = discard
         self.play_base = play_base
         self.seen = {}
 
@@ -58,8 +54,8 @@ class play_discard_rater():
         #store the card in the seen list
         self.seen[card.value] = 1
 
-        if self.play_base[card.color] >= card.value:
-            return Rating(index,1,0) # return that it's useless
+        if self.play_base[card.color] >= card.value: #if the card is useless
+            return Rating(index,1,0) 
         
         if card.number == 5 or self.discard[card.value] == 1: #if the card is essential
             diff = 5 - card.number
@@ -84,12 +80,12 @@ class Cheating_play():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #infinte clues, perfect knowledge
-       #stop = input()
+        #stop = input()
         seen = {x:0 for x in range(1,(6 * 5) + 1)}
         seen[500] = 0
         could_discard = []
         other_hand_could_discard = []
-        for card_index in range(len(my_hand)):
+        for card_index in reversed(range(len(my_hand))):
             if self._is_playable(my_hand[card_index],play_base):
                 return ("play",card_index)
             if not self._is_essential(my_hand[card_index],play_base,discard):
@@ -127,43 +123,5 @@ class Cheating_play():
             return True
         return False
 
-
-
-
-# Categories of usefullness: 
-        # 1. Useless: If we've already played it, we don't care
-        # 2. Other; how we recon this is the difference between strategies
-            # 1. We can discard the highest card,
-            # 2. We can discard the highest chain card
-        # 3. Essential: It's a 5, or we've discarded it before
-
-#goals pass a card in
-class Rating():
-    def __init__(self,index,category,difference):
-        self.index = index
-        self.category = category
-        self.diff = difference
-        
-    def __eq__(self, other):
-        if not isinstance(other,Rating):
-            return False
-        
-        if other.category != self.category:
-            return False
-        
-        if other.diff != self.diff:
-            return False
-    
-        return True
-    
-    def __lt__(self,other):
-        if self.category < other.category:
-            return True
-
-        if self.category == other.category and self.diff > other.diff:
-            return True
-        
-        return False
-        
 
 

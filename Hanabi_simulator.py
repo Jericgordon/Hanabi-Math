@@ -71,7 +71,6 @@ class Hanabi_game():
                     self._play_card(self.hands[player],move[1])
                 case "discard":
                     self._discard_card(self.hands[player],move[1])
-                    self.clue_counter += 1 #we don't have logic that forbids discarding with + 8 clue tokens
                 case "clue":
                     self.clue_counter -= 0
                     self._clue_hand(self.hands[opponant],move[1],move[2])
@@ -97,6 +96,8 @@ class Hanabi_game():
             self.print_visual_discard()
             self.print_visual_play_base()
             self.print_visual_other_hand(self.hands[(self.turn +1) % 2])
+            self.print_visual_other_hand(self.hands[(self.turn) % 2])
+            self.print_visual_my_hand(self.hands[(self.turn +1) % 2])
             self.print_visual_my_hand(self.hands[(self.turn) % 2])
     
     def _discard_card(self,hand,index:int):
