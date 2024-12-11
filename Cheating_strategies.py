@@ -7,7 +7,7 @@ class Clue_color():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #limited clues, must clue before playing, perfect knowledge
-        stop = input()
+        #stop = input()
         my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
         s = play_discard_rater(discard,play_base)
         for card_index in range(len(my_hand)):
@@ -20,6 +20,40 @@ class Clue_color():
         for card_index in range(len(other_hand)):
             if self._is_playable(other_hand[card_index],play_base) and clue_tokens > 0:
                 return("clue","color",other_hand[card_index].color)
+            other_rating = s.rate_next_card(card_index,my_hand[card_index])
+            if other_rating < my_hand_rating or self._is_playable(other_hand[card_index],play_base): # if it's playable or better to discard
+                return("clue","number",5) #clue the blue card
+
+        return("discard",my_hand_rating.index)
+ 
+
+    def _is_playable(self,card,play_base) -> bool:
+        if card.value == 500:
+            return False
+        if play_base[card.color] == (card.value - 1):
+            return True
+        return False
+    
+class Clue_num():
+    # Statuses of playing
+        # 1.clue
+        # 2.discard
+        # 3.play
+    def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
+        #limited clues, must clue before playing, perfect knowledge
+        #stop = input()
+        my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
+        s = play_discard_rater(discard,play_base)
+        for card_index in range(len(my_hand)):
+            if self._is_playable(my_hand[card_index],play_base) and my_hand[card_index].get_number() != -1:
+                return ("play",card_index)
+            r = s.rate_next_card(card_index,my_hand[card_index])
+            if r < my_hand_rating:
+                my_hand_rating = r
+            
+        for card_index in range(len(other_hand)):
+            if self._is_playable(other_hand[card_index],play_base) and clue_tokens > 0:
+                return("clue","number",other_hand[card_index].number)
             other_rating = s.rate_next_card(card_index,my_hand[card_index])
             if other_rating < my_hand_rating or self._is_playable(other_hand[card_index],play_base): # if it's playable or better to discard
                 return("clue","number",5) #clue the blue card

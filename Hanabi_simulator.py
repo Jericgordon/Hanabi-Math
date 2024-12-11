@@ -93,6 +93,7 @@ class Hanabi_game():
         if self.debug:
             print(f"turn {self.turn}")
             print("")
+            self.print_visual_clue_counter()
             self.print_visual_discard()
             self.print_visual_play_base()
             self.print_visual_other_hand(self.hands[(self.turn +1) % 2])
@@ -143,6 +144,9 @@ class Hanabi_game():
     def _add_clue_token(self) -> None:
         if self.clue_counter < 8:
             self.clue_counter += 1
+
+    def print_visual_clue_counter(self):
+        print("Clues Available: " + str(self.clue_counter))
 
     def print_visual_play_base(self):
         print("Play Base: ",end="")
