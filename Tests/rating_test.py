@@ -15,9 +15,17 @@ class Rating_tests(unittest.TestCase):
         r2 = Rating(index,2,5)
         self.assertLess(r1,r2)
 
+        r5 = Rating(index,4,5)
+        r6 = Rating(index,3,5)
+        self.assertLess(r6,r5)
+
         r3 = Rating(index,2,5)
         r4 = Rating(index,2,4)
         self.assertLess(r4,r3)
+        
+        r7 = Rating(index,4,5)
+        r8 = Rating(index,4,4)
+        self.assertLess(r8,r7)
 
     def test_equal(self):
         index = 2
