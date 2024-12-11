@@ -72,7 +72,7 @@ class Hanabi_game():
                 case "discard":
                     self._discard_card(self.hands[player],move[1])
                 case "clue":
-                    self.clue_counter -= 0
+                    self.clue_counter -= 1
                     self._clue_hand(self.hands[opponant],move[1],move[2])
                 case _:
                     raise ValueError("Invalid move given. Valid moves are play, clue, discard")

@@ -1,5 +1,40 @@
 from rating import Rating
 
+class Clue_color():
+    # Statuses of playing
+        # 1.clue
+        # 2.discard
+        # 3.play
+    def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
+        #infinte clues, perfect knowledge
+        my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
+        s = play_discard_rater(discard,play_base)
+        for card_index in range(len(my_hand)):
+            if self._is_playable(my_hand[card_index],play_base) and :
+                return ("play",card_index)
+            r = s.rate_next_card(card_index,my_hand[card_index])
+            if r < my_hand_rating:
+                my_hand_rating = r
+            
+        for card_index in range(len(other_hand)):
+            other_rating = s.rate_next_card(card_index,my_hand[card_index])
+            if other_rating < my_hand_rating or self._is_playable(other_hand[card_index],play_base): # if it's playable or better to discard
+                return("clue","number",5) #clue the blue card
+
+        return("discard",my_hand_rating.index)
+ 
+
+    def _is_playable(self,card,play_base) -> bool:
+        if card.value == 500:
+            return False
+        if play_base[card.color] == (card.value - 1):
+            return True
+        return False
+    
+    # def _is_clueable(self, card,play_base) -> bool:
+    #     if self._is_playable(card,play_base):
+            
+
 class Cheating_play_discard():
     # Statuses of playing
         # 1.clue 
