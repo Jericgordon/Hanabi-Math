@@ -8,7 +8,7 @@ class Clue_eff():
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #limited clues, must clue before playing, perfect knowledge
         # stop = input()
-        my_hand_rating = Rating(0,4,0) #index, category, other_value # see comment above discard_usefullness
+        my_hand_rating = Rating(1,4,0) #index, category, other_value # see comment above discard_usefullness
         s = card_rater(play_base,discard)
         for card_index in range(len(my_hand)):
             if self._is_playable(my_hand[card_index],play_base) and self._is_clued(my_hand[card_index]):
@@ -18,7 +18,7 @@ class Clue_eff():
                 my_hand_rating = r
         
         if clue_tokens <= 0:
-            return("discard",r.index)
+            return("discard",my_hand_rating.index)
         
         opt_clue = self._opt_clue(other_hand,play_base)
         if opt_clue != None:
@@ -203,7 +203,7 @@ class card_rater():
     
     def rate_next_card(self,index,card) -> Rating:
         if card.value == 500:
-            return Rating(index,4,5) # return max rating. We never want to discard the filler card
+            return Rating(index,4,0) # return max rating. We never want to discard the filler card
     
         if self._is_playable(card): #returns a rating of 4 if playable
             other_value = 5 - card.number

@@ -24,8 +24,8 @@ def main():
 
     width = .25
     r = np.arange(26)
-    plt.bar(r + width,score_clue_eff,color = 'b',width=.25,label = "clue efficiency")
-    plt.legend()
+    plt.bar(r + width,score_clue_eff,color = 'b',width=.25)
+    #plt.legend()
     plt.show()
 
 
