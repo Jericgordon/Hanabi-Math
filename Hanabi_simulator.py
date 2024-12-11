@@ -60,6 +60,9 @@ class Hanabi_game():
         opponant = 1
         s1 = strategy() #strategy for player 1
         s2 = strategy() #strategy for player 2
+        if self.clues_per_play != 0: #sets clue cost in strategy if enabled
+            s1.clue_cost = self.clues_per_play # 
+            s2.clue_cost = self.clues_per_play #
         while last_moves >= 0 and self.score != (self.colors * 5):
             if len(self.deck) == 0:
                 last_moves -= 1 #this gives us exactly 2 turns after the deck depletes, which the rules require
