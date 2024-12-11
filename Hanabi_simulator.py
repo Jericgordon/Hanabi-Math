@@ -61,8 +61,8 @@ class Hanabi_game():
         s1 = strategy() #strategy for player 1
         s2 = strategy() #strategy for player 2
         if self.clues_per_play != 0: #sets clue cost in strategy if enabled
-            s1.clue_cost = self.clues_per_play # 
-            s2.clue_cost = self.clues_per_play #
+            s1.play_cost = self.clues_per_play # 
+            s2.play_cost = self.clues_per_play #
         while last_moves >= 0 and self.score != (self.colors * 5):
             if len(self.deck) == 0:
                 last_moves -= 1 #this gives us exactly 2 turns after the deck depletes, which the rules require
@@ -98,6 +98,7 @@ class Hanabi_game():
         if self.debug:
             print(f"turn {self.turn}")
             print("")
+            print(f"Clue tokens: {self.clue_counter}")
             self.print_visual_discard()
             self.print_visual_play_base()
             self.print_visual_other_hand(self.hands[(self.turn +1) % 2])
@@ -149,8 +150,10 @@ class Hanabi_game():
         return (card -1) // 5
 
     def _add_clue_token(self) -> None:
-        if self.clue_counter < 8:
-            self.clue_counter += 1
+        self.clue_counter += 1
+        if self.clue_counter > 8:
+            self.clue_counter = 8 
+            
 
     def print_visual_play_base(self):
         print("Play Base: ",end="")
