@@ -6,17 +6,20 @@ class Clue_color():
         # 2.discard
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
-        #infinte clues, perfect knowledge
+        #limited clues, must clue before playing, perfect knowledge
+        stop = input()
         my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
         s = play_discard_rater(discard,play_base)
         for card_index in range(len(my_hand)):
-            if self._is_playable(my_hand[card_index],play_base) and :
+            if self._is_playable(my_hand[card_index],play_base) and my_hand[card_index].get_color() != -1:
                 return ("play",card_index)
             r = s.rate_next_card(card_index,my_hand[card_index])
             if r < my_hand_rating:
                 my_hand_rating = r
             
         for card_index in range(len(other_hand)):
+            if self._is_playable(other_hand[card_index],play_base) and clue_tokens > 0:
+                return("clue","color",other_hand[card_index].color)
             other_rating = s.rate_next_card(card_index,my_hand[card_index])
             if other_rating < my_hand_rating or self._is_playable(other_hand[card_index],play_base): # if it's playable or better to discard
                 return("clue","number",5) #clue the blue card
