@@ -9,7 +9,7 @@ class Hanabi_game():
         self.print_lost_games = False
         self.debug = False
         self.colors = colors
-        self.clues_per_play = 1 #this is a testing parameter for auto-deducting a clue per_play. 
+        self.clues_per_play = 0 #this is a testing parameter for auto-deducting a clue per_play. 
                             #has no use in the real game
 
         #built in options
@@ -126,7 +126,7 @@ class Hanabi_game():
     def _play_card(self,hand,hand_index:int) -> None:
         card = hand[hand_index]
         self.clue_counter -= self.clues_per_play
-        if self.clue_counter < 0:
+        if self.clue_counter < 0 and self.clues_per_play != 0:
             raise RuntimeError("Cannot have less than 0 clue tokens")
         if not self._is_playable(card): #if the selected card is not playable
             self.misfires += 1
