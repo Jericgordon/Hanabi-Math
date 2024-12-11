@@ -8,7 +8,7 @@
 
 class Rating():
     def __init__(self,index,category,difference):
-        if category < 1 or category > 3:
+        if category < 1 or category > 4:
             raise AttributeError("Rating category must be between 1-3")
         if difference < 0 or difference > 5:
             raise AttributeError("diff should be between 0,5")
