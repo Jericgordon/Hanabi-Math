@@ -46,7 +46,7 @@ class play_discard_rater():
 
     def rate_next_card(self,index,card) -> Rating:
         if card.value == 500:
-            return Rating(index,3,5) # return max rating. We never want to discard the filler card
+            return Rating(index,4,0) # return max rating. We never want to discard the filler card
         
         #store the card in the seen list
         self.seen[card.value] = 1
@@ -149,7 +149,7 @@ class Cheating_clue_cost():
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #stop = input()
         self._new_turn(play_base,discard)
-        my_hand_rating = Rating(0,4,5) # initally set our hand to the most essential card
+        my_hand_rating = Rating(0,4,0) # initally set our hand to the most essential card
         for card_index in range(len(my_hand)):
             r = self.rate_next_card(card_index,my_hand[card_index])
             if r.category == 3 and self._can_play(clue_tokens):
@@ -186,7 +186,7 @@ class Cheating_clue_cost():
     
     def rate_next_card(self,index,card) -> Rating:
         if card.value == 500:
-            return Rating(index,4,5) # return max rating. We never want to discard the filler card
+            return Rating(index,4,0) # return max rating. We never want to discard the filler card
     
         if self._is_playable(card): #returns a rating of 4 if playable
             other_value = 5 - card.number
