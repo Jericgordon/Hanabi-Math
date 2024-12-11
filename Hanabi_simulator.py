@@ -9,6 +9,8 @@ class Hanabi_game():
         self.print_lost_games = False
         self.debug = False
         self.colors = colors
+        self.clues_per_play = 1 #this is a testing parameter for auto-deducting a clue per_play. 
+                            #has no use in the real game
 
         #built in options
         self.color_order ={0:"red",1:'yellow',2:'green',3:'blue',4:'white',5:'magenta'}
@@ -72,7 +74,6 @@ class Hanabi_game():
                 case "discard":
                     self._discard_card(self.hands[player],move[1])
                 case "clue":
-                    self.clue_counter -= 0
                     self._clue_hand(self.hands[opponant],move[1],move[2])
                 case _:
                     raise ValueError("Invalid move given. Valid moves are play, clue, discard")
@@ -86,6 +87,7 @@ class Hanabi_game():
         return self.score
 
     def _clue_hand(self,hand,clue_type,clue:int):
+        self.clue_counter -= 1
         for card in hand:
             card.clue(clue_type,clue)
         
@@ -123,6 +125,9 @@ class Hanabi_game():
 
     def _play_card(self,hand,hand_index:int) -> None:
         card = hand[hand_index]
+        self.clue_counter -= self.clues_per_play
+        if self.clue_counter < 0:
+            raise RuntimeError("Cannot have less than 0 clue tokens")
         if not self._is_playable(card): #if the selected card is not playable
             self.misfires += 1
             if self.misfires >= 3:
