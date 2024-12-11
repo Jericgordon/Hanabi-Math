@@ -7,9 +7,9 @@ class Clue_eff():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #limited clues, must clue before playing, perfect knowledge
-        stop = input()
+        # stop = input()
         my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
-        s = play_discard_rater(discard,play_base)
+        s = card_rater(play_base,discard)
         for card_index in range(len(my_hand)):
             if self._is_playable(my_hand[card_index],play_base) and self._is_clued(my_hand[card_index]):
                 return ("play",card_index)
@@ -185,40 +185,39 @@ class Cheating_play_discard():
         return False
     
 
-        
-
-class play_discard_rater():
-    def __init__(self,discard, play_base):
-        self.discard = discard
+class card_rater():
+    def __init__(self,play_base,discard):
         self.play_base = play_base
+        self.discard = discard
 
-
-    # Categories of usefullness: 
-    # 1. Useless: If we've already played it, we don't care
-    # 2. Other; how we recon this is the difference between strategies
-        # 1. We can discard the highest card,
-        # 2. We can discard the highest chain card
-    # 3. Essential: It's a 5, or we've discarded it before
-
+    def _is_playable(self,card) -> bool:
+        if card.value == 500:
+            return False
+        if self.play_base[card.color] == (card.value - 1):
+            return True
+        return False
+    
     def rate_next_card(self,index,card) -> Rating:
         if card.value == 500:
-            return Rating(index,3,5) # return max rating. We never want to discard the filler card
-        
+            return Rating(index,4,5) # return max rating. We never want to discard the filler card
+    
+        if self._is_playable(card): #returns a rating of 4 if playable
+            other_value = 5 - card.number
+            return Rating(index,3,other_value)
         #store the card in the seen list
+        
+
         if self.play_base[card.color] >= card.value: #if the card is useless
             return Rating(index,1,0) 
         
-        if card.number == 5 or self.discard[card.value] == 1: #if the card is essential
+        if card.number == 5 or (self.discard[card.value] == 1 and card.number != 1) or \
+            (card.number == 1 and self.discard[card.value] == 2): #if the card is essential
             diff = 5 - card.number
-            return Rating(index,3,diff)
+            return Rating(index,4,diff)
 
-        #if we have a copy of it in either of the hands
 
-        else:
-            diff = card.value - self.play_base[card.color] #difference between what's played, and what the card is
-            return Rating(index,2,diff)
-        
-
+        diff = abs(self.play_base[card.color] - card.value) #difference between what's played, and what the card is
+        return Rating(index,2,diff)
 
 
 
