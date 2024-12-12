@@ -6,9 +6,9 @@ import numpy as np
 
 
 def main():
-    iterations = 10000
-    score_play_and_discard = [0 for _ in range(26)] 
-    score_play = [0 for _ in range(26)] 
+    iterations = 100000
+    score_play_and_discard = [0 for _ in range(26)]
+    score_play = [0 for _ in range(26)]
     s = Hanabi_game(5)
     #s.debug = True 
     for _ in range(iterations):
@@ -32,6 +32,8 @@ def main():
     
     plt.bar(r,score_play_and_discard,color = 'b',width=.5)
     plt.bar(r + width,score_play,color = 'g',width=.25)
+    plt.xlabel("Score achieved")
+    plt.ylabel("Iterations")
     plt.show()
 
 

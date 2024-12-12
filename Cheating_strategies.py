@@ -7,7 +7,8 @@ class Cheating_play_discard():
         # 3.play
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens):
         #infinte clues, perfect knowledge
-        my_hand_rating = Rating(0,3,5) #index, category, other_value # see comment above discard_usefullness
+        #stop = input()
+        my_hand_rating = Rating(0,3,0) #index, category, other_value # see comment above discard_usefullness
         s = play_discard_rater(discard,play_base)
         for card_index in range(len(my_hand)):
             if self._is_playable(my_hand[card_index],play_base):
@@ -38,7 +39,6 @@ class play_discard_rater():
     def __init__(self,discard, play_base):
         self.discard = discard
         self.play_base = play_base
-        self.seen = {}
 
     # Categories of usefullness: 
     # 1. Useless: If we've already played it, we don't care
@@ -49,21 +49,17 @@ class play_discard_rater():
 
     def rate_next_card(self,index,card) -> Rating:
         if card.value == 500:
-            return Rating(index,3,5) # return max rating. We never want to discard the filler card
+            return Rating(index,3,0) # return max rating. We never want to discard the filler card
         
         #store the card in the seen list
-        self.seen[card.value] = 1
-
         if self.play_base[card.color] >= card.value: #if the card is useless
             return Rating(index,1,0) 
         
         if card.number == 5 or self.discard[card.value] == 1: #if the card is essential
-            diff = 5 - card.number
+            diff = card.number
             return Rating(index,3,diff)
 
         #if we have a copy of it in either of the hands
-        if card.value in self.seen.keys():
-            return Rating(index,1,0)
 
         else:
             diff = card.value - self.play_base[card.color] #difference between what's played, and what the card is

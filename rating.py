@@ -33,7 +33,7 @@ class Rating():
         if self.category < other.category:
             return True
 
-        if self.category == other.category and self.diff < other.diff:
+        if self.category == other.category and self.diff > other.diff:
             return True
         
         return False
