@@ -12,8 +12,8 @@ class Hanabi_game():
 
         #built in options
         self.color_order ={0:"red",1:'yellow',2:'green',3:'blue',4:'white',5:'magenta'}
-        self.discards_reference = {x:0 for x in range(1,(self.colors * 5) + 1)}
-        self.play_base_reference = [x for x in range(0,(self.colors) * 5,5)]
+        self.discards_reference = {x:0 for x in range(1,(self.colors * 5) + 1)} #color is  x//5
+        self.play_base_reference = [x for x in range(0,(self.colors) * 5,5)] #1,2,3,4,5, 6 # number is card # 5
         self.deck_reference = self._make_deck(colors)
 
     def print_lost_games(self):
