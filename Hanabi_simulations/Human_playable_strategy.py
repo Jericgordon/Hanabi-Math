@@ -1,5 +1,12 @@
-#from abc import ABC,ABCMeta
-class Strategy():
+class Human_playable_strategy():
+    """
+        This embeds a human playable version of Hanabi into the Hanabi_simulator. Rather than
+        Automating it, this allows 2 humans to play in terminal.
+
+        It serves as an example of the flexiblity of the design choices made with the main
+        module, as well as a fun sideproject
+    
+    """
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens): #this returns a tuple of the following format (move,relevant_index) or (clue,clue_type,clue). Move has 3 valid states 
         move = 0
         while move not in range(1,4):

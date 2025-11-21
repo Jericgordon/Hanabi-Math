@@ -1,8 +1,8 @@
-# we use a class to represent a hanabi card, and group related functions.
-# importantly, we use by convention the card 0 to indicate a null value
+
 from termcolor import colored #used for printing Hanabi boards in readable output
 
-class Hanabi_card():    
+class Hanabi_card():
+    """Hanabi Card is a class created to represent a card in a hand of Hanabi"""    
     card_id = 0
     def __init__(self,card:int):
         if card < 0: #check for valid value
@@ -27,29 +27,39 @@ class Hanabi_card():
             #how to tell cards across rounds
     
     def __str__(self):
+        """Allows a print(card) statement to correctly print in color"""
         number = self.number if self._number_known else "*"
         color = self._color_text if self._color_known else "dark_grey"
         return colored(number,color) + " "
 
     def get_entire_card(self) -> str:
+        """Allows getting the entire card, ignoring whether it's been clued or not"""
         number = self.number
         color = self._color_text
         return colored(number,color) + " "
 
 
     def get_color(self): #returns -1 if color not yet identified
+        """Returns the color of the card if known, or -1 if not identified"""
         if self._color_known:
             return self.color
         else: 
             return -1 
         
     def get_number(self): #returns -1 if color not yet identified
+        """Returns the number of the card if known, or -1 if not identified"""
         if self._number_known:
             return self.number
         else:
             return -1
     
     def clue(self,clue_type,clue): # clue_type should be an enum
+        """Allows a 'clue' to be given to a number card. This markes the color or number as "known"
+        if applicable, and future calls to get_number/get_color will respond correctly
+            Parmeters:
+                clue_tyle: takes a string "number" or "color" to represent the sort of clue given
+                clue: takes a number (1-5) if a number clue, or a color (1-5,6) if a color clue
+        """
         if clue_type == "number" and self.number == clue:
             self._number_known = True
         

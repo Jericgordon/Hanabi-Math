@@ -1,5 +1,10 @@
 import random
+"""
+A brief note on this module. This was my attempt to solve Hanabi with Code
 
+
+
+"""
 
 
 #A unique card is card (color_number * 5) + card_number

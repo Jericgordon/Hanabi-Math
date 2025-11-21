@@ -4,6 +4,9 @@ from termcolor import colored #used for printing Hanabi boards in readable outpu
 from Card import Hanabi_card
 
 class Hanabi_game():
+    """This exists as an engine to Run a game of Hanabi. Aside from preferences
+    
+    """
     def __init__(self,colors:int) -> None:
         #user preferences
         self.print_lost_games = False
