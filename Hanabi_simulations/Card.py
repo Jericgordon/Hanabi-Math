@@ -31,12 +31,24 @@ class Hanabi_card():
         number = self.number if self._number_known else "*"
         color = self._color_text if self._color_known else "dark_grey"
         return colored(number,color) + " "
-
+    
     def get_entire_card(self) -> str:
-        """Allows getting the entire card, ignoring whether it's been clued or not"""
+        """legacy compatability function"""
+        return self.get_pretty_entire_card()
+
+    def get_pretty_entire_card(self) -> str:
+        """Allows getting the entire card, ignoring whether it's been clued or not
+            Returns:
+                A colord version of the card for printing. Used if the card is in the other player's hand
+        """
         number = self.number
         color = self._color_text
         return colored(number,color) + " "
+    
+    def get_value(self):
+        """Using this method qualifies as cheating. if the card is not fully know. It returns
+        The encoded value of the card"""
+        return self.value
 
 
     def get_color(self): #returns -1 if color not yet identified

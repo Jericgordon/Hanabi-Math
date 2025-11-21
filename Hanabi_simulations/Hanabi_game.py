@@ -3,14 +3,35 @@ import copy #used for makeing a copy of a the deck to shuffle
 from termcolor import colored #used for printing Hanabi boards in readable output
 from Card import Hanabi_card
 
+
+"""
+For anyone trying to read and understand this:
+
+One of the main challanges in Hanabi is Efficient encoding of cards into numbers. The way I accomplished this
+was to do the numbers 0-25, and have each number encode both a color, and a number.
+
+{1,2,3,4,5} are one suit
+{6,7,8,9,6} are another, and so on.
+
+The advantage of this is that
+num % 5 is the number of the suite
+and (num -1) // 5 is the color of the suite (or at least a number 1-6 representing color)
+
+These are all arranged in various places throughout this code. The purpose of the Card class
+was to simplifiy some of this for the end user, but if there are tweaks here and there, it's important
+to understand the underlying encoding of much of this.
+"""
+
 class Hanabi_game():
-    """This exists as an engine to Run a game of Hanabi. Aside from preferences
-    
+    """This exists as an engine to Run a game of Hanabi. In order to use this, you will need to 
+    1) Instantiate this class with a number of colors in the deck (5,6)
+    2) Create a Strategy (see Readme)
+    3) run "play game" with the class (uninstantieated as an object"
     """
     def __init__(self,colors:int) -> None:
         #user preferences
         self.print_lost_games = False
-        self.debug = False
+        self.debug = True
         self.colors = colors
 
         #built in options
@@ -75,7 +96,7 @@ class Hanabi_game():
                 case "discard":
                     self._discard_card(self.hands[player],move[1])
                 case "clue":
-                    self.clue_counter -= 0
+                    self.clue_counter -= 1
                     self._clue_hand(self.hands[opponant],move[1],move[2])
                 case _:
                     raise ValueError("Invalid move given. Valid moves are play, clue, discard")
@@ -146,6 +167,14 @@ class Hanabi_game():
     def _add_clue_token(self) -> None:
         if self.clue_counter < 8:
             self.clue_counter += 1
+
+    """All of the function below here with the tag 'print visual' have to do with multicolor printing.
+    Refer to my comment at the beginning of this module, but they're to make any debugging or visual
+    record keeping to be as painless as possible.
+
+    They all decode, and just print in the terminal as the color and number of the card the underlying
+    encoding represents. It's neat, and really helpful
+    """
 
     def print_visual_play_base(self):
         print("Play Base: ",end="")
