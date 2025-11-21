@@ -71,6 +71,13 @@ and is the play base for the second color. This can cause bugs if you're only lo
 		misfires : int, the number of misfires so far
 
 		clue_tokens : the number of clue tokens available.
+
+	Returns:
+		One of 3 options
+			-> ("play",index)
+			-> ("discard",index)
+			-> ("clue",clue_type ("number" or "color"), the number or color your're clueing) 
+			EG. (play,0),(discard,4),("clue","number",5),("clue","color",0s
 ```
 
 
