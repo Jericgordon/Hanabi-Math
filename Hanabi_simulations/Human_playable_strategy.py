@@ -6,6 +6,7 @@ class Human_playable_strategy():
         It serves as an example of the flexiblity of the design choices made with the main
         module, as well as a fun sideproject
     
+        
     """
     def play_next_turn(self,my_hand,other_hand,discard,play_base,misfires,clue_tokens): #this returns a tuple of the following format (move,relevant_index) or (clue,clue_type,clue). Move has 3 valid states 
         move = 0
