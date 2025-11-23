@@ -106,7 +106,7 @@ class Hanabi_game():
             opponant = (player + 1) % 2
             if self._game_lost:
                 break
-        self._print_all()
+        #self._print_all() removed final print statment to avoid confusion
         return self.score
 
     def _clue_hand(self,hand,clue_type,clue:int):

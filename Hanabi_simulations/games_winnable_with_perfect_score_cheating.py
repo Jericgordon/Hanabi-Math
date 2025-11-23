@@ -21,7 +21,8 @@ def main():
      """
 
      game = Hanabi_game(5) # 
-     number_of_games = 10 ** 5
+     game.debug = True
+     number_of_games = 10 ** 3
 
      #final results variables
      games_exactly_at_25 = 0
@@ -31,9 +32,10 @@ def main():
           if (game.play_game(Cheating_play_discard) == 25):
                games_exactly_at_25 += 1
           else:
+               break # temporary break to print these games
                games_less_than_25 += 1
 
-     graph_won_lost([games_exactly_at_25,games_less_than_25])
+     # graph_won_lost([games_exactly_at_25,games_less_than_25])
 
 
 
