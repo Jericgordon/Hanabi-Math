@@ -31,7 +31,7 @@ class Hanabi_game():
     def __init__(self,colors:int) -> None:
         #user preferences
         self.print_lost_games = False
-        self.debug = True
+        self.debug = False
         self.colors = colors
 
         #built in options
