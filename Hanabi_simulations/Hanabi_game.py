@@ -31,7 +31,7 @@ class Hanabi_game():
     def __init__(self,colors:int) -> None:
         #user preferences
         self.print_lost_games = False
-        self.debug = False
+        self.debug = True
         self.colors = colors
 
         #built in options
@@ -117,12 +117,14 @@ class Hanabi_game():
         if self.debug:
             print(f"turn {self.turn}")
             print("")
+            print("Cards left in Deck",len(self.deck))
             self.print_visual_discard()
             self.print_visual_play_base()
-            self.print_visual_other_hand(self.hands[(self.turn +1) % 2])
-            self.print_visual_other_hand(self.hands[(self.turn) % 2])
-            self.print_visual_my_hand(self.hands[(self.turn +1) % 2])
-            self.print_visual_my_hand(self.hands[(self.turn) % 2])
+            self.print_visual_other_hand("current player ",self.hands[(self.turn +1) % 2])
+            self.print_visual_other_hand("other player ",self.hands[(self.turn) % 2])
+            # self.print_visual_my_hand(self.hands[(self.turn +1) % 2])
+            # self.print_visual_my_hand(self.hands[(self.turn) % 2])
+
     
     def _discard_card(self,hand,index:int):
         self.discards[hand[index].value] +=1 # we do store cards in the discard by their literal value, not by card                                              
@@ -188,8 +190,8 @@ class Hanabi_game():
             print(colored(number,color) + " ",end="")
         print("")
 
-    def print_visual_other_hand(self,hand):
-        print("hand: ",end="")
+    def print_visual_other_hand(self,prefix,hand):
+        print(prefix + "hand: ",end="")
         for card in hand:
             print(card.get_entire_card(),end="")
         print("")
