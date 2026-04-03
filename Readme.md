@@ -108,6 +108,6 @@ A card has 3 important methods which will be listed here
 This module does not at this time provide support for flamboyants or Black Poweder.
 
 ### Results
-I'll provide a copy of My personal results using this in the description.
+A complete copy of our results can be found <a href="https://github.com/Jericgordon/Hanabi-Math/blob/main/Conclusions/Final_Project_Writup-2.pdf">here</a>
 
 
